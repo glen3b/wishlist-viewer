@@ -6,5 +6,6 @@
     <string-array name="wishlists">
         <item >UNKNOWN</item>
     </string-array>
+    <string name="defaults">Change Default Instance</string>
 
 </resources>
