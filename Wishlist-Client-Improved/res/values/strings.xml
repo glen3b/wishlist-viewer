@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Wishlist Viewer</string>
+    <string name="listshow">Show Wishlist</string>
+    <string-array name="wishlists">
+        <item >UNKNOWN</item>
+    </string-array>
+
+</resources>
