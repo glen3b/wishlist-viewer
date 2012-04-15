@@ -19,7 +19,6 @@ public final class R {
     public static final class id {
         public static final int changedefault=0x7f060002;
         public static final int showlist=0x7f060001;
-        public static final int update=0x7f060003;
         public static final int wishlist=0x7f060000;
     }
     public static final class layout {
@@ -29,6 +28,5 @@ public final class R {
         public static final int app_name=0x7f040000;
         public static final int defaults=0x7f040002;
         public static final int listshow=0x7f040001;
-        public static final int update=0x7f040003;
     }
 }

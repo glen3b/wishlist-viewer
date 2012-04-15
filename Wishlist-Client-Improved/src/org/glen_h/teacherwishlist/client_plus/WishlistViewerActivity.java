@@ -38,10 +38,7 @@ import org.apache.http.message.BasicNameValuePair;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -170,22 +167,6 @@ public class WishlistViewerActivity extends Activity {
         setContentView(R.layout.main);
         wishlist_choose = (Spinner) findViewById(R.id.wishlist);
         showlist = (Button) findViewById(R.id.showlist);
-        Button update = (Button) findViewById(R.id.update);
-        try {
-			if(Float.parseFloat(downloadFile(makeURL("http://wishlist-viewer.googlecode.com/files/wapp_latestversion"))[0]) > Float.parseFloat(getApplicationContext().getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0 ).versionName)){
-				update.setVisibility(View.VISIBLE);
-				update.setOnClickListener(new View.OnClickListener() {
-		            public void onClick(View v) {
-		            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://wishlist-viewer.googlecode.com/files/Wishlist-Viewer_"+downloadFile(makeURL("http://wishlist-viewer.googlecode.com/files/wapp_latestversion"))[0]+".apk"));
-		            	startActivity(browserIntent);
-		            }
-		        });
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (NameNotFoundException e) {
-			e.printStackTrace();
-		}
         Button chdefault = (Button) findViewById(R.id.changedefault);
         final SharedPreferences data = getSharedPreferences("Wishlist_Cloud_Editor", 0);
         if(data.getString("instance_url", null) == null){
@@ -299,6 +280,12 @@ public class WishlistViewerActivity extends Activity {
            	    					   if(status == -1){
            	    						// Function error
            	    						makeSimpleConfirmDialog("ERROR", "An error occurred sending the request.");
+           	    					   }else if(status == 403){
+           	    						// Wishlist or file error
+           	    						makeSimpleConfirmDialog("ERROR", "An error occurred finding the wishlist or opening the file.");
+           	    					   }else if(status == 401){
+           	    						// Invalid password
+           	    						makeSimpleConfirmDialog("ERROR", "Your wishlist password was incorrect.");
            	    					   }else if(status == 500){
            	    						// Web script error
            	    						makeSimpleConfirmDialog("ERROR", "An error occurred in the script. Please contact the server administrator.");
