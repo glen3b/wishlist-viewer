@@ -7,5 +7,6 @@
         <item >UNKNOWN</item>
     </string-array>
     <string name="defaults">Change Default Instance</string>
+    <string name="update">Apply Update</string>
 
 </resources>
