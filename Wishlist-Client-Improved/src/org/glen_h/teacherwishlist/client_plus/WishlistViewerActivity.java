@@ -26,6 +26,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -52,6 +53,20 @@ public class WishlistViewerActivity extends Activity {
     
 	private Spinner wishlist_choose;
 	private Button showlist;
+	
+	
+	void makeSimpleConfirmDialog(String title, String message){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		if(message != null) builder.setMessage(message);
+		if(title != null) builder.setTitle(title);
+		builder.setCancelable(true);
+		builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		           }
+		       });
+		builder.show();
+	}
 	
 	/**
 	 * Downloads a text file and returns its contents as an array.
@@ -106,7 +121,15 @@ public class WishlistViewerActivity extends Activity {
 	return website;
 	}
 	
-	public static void postData(String url, String[] ids, String[] values) {
+	/**
+	 * Post data to a URL.
+	 * @author Glen Husman
+	 * @param url The URL to post data to.
+	 * @param ids The array of IDs of POST variables.
+	 * @param values The array of values of POST variables.
+	 * @return The HTTP status code of the request.
+	 */
+	public static int postData(String url, String[] ids, String[] values) {
 	    // Create a new HttpClient and Post Header
 	    HttpClient httpclient = new DefaultHttpClient();
 	    HttpPost httppost = new HttpPost(url);
@@ -121,14 +144,15 @@ public class WishlistViewerActivity extends Activity {
 	        httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 	        // Execute HTTP Post Request
-	        httpclient.execute(httppost);
+	        HttpResponse result = httpclient.execute(httppost);
+	        return result.getStatusLine().getStatusCode();
 	        }else{
-	        	return;
+	        	return -1;
 	        }
 	    } catch (ClientProtocolException e) {
-	    	return;
+	    	return -1;
 	    } catch (IOException e) {
-	    	return;
+	    	return -1;
 	    }
 	} 
 	
@@ -252,7 +276,20 @@ public class WishlistViewerActivity extends Activity {
             	    	        	   // Mark as bought
             	    	        	   String[] post_vars = {"extension", "wishlist", "item"};
             	    	        	   String[] post_data = {"bought", (String) wishlist_choose.getSelectedItem(), wlist[itemid_dialog]};
-            	    	        	   postData(instance_url.replace("wishlist-edit.php", "wishlist-extension.php"), post_vars, post_data);
+            	    	        	   int status = postData(instance_url.replace("wishlist-edit.php", "wishlist-extension.php"), post_vars, post_data);
+           	    					   if(status == -1){
+           	    						// Function error
+           	    						makeSimpleConfirmDialog("ERROR", "An error occurred sending the request.");
+           	    					   }else if(status == 403){
+           	    						// Wishlist or file error
+           	    						makeSimpleConfirmDialog("ERROR", "An error occurred finding the wishlist or opening the file.");
+           	    					   }else if(status == 401){
+           	    						// Invalid password
+           	    						makeSimpleConfirmDialog("ERROR", "Your wishlist password was incorrect.");
+           	    					   }else if(status == 500){
+           	    						// Web script error
+           	    						makeSimpleConfirmDialog("ERROR", "An error occurred in the script. Please contact the server administrator.");
+           	    					}
             	    	           }
             	    	       })
             	    	       .setNegativeButton("No", new DialogInterface.OnClickListener() {
