@@ -280,12 +280,6 @@ public class WishlistViewerActivity extends Activity {
            	    					   if(status == -1){
            	    						// Function error
            	    						makeSimpleConfirmDialog("ERROR", "An error occurred sending the request.");
-           	    					   }else if(status == 403){
-           	    						// Wishlist or file error
-           	    						makeSimpleConfirmDialog("ERROR", "An error occurred finding the wishlist or opening the file.");
-           	    					   }else if(status == 401){
-           	    						// Invalid password
-           	    						makeSimpleConfirmDialog("ERROR", "Your wishlist password was incorrect.");
            	    					   }else if(status == 500){
            	    						// Web script error
            	    						makeSimpleConfirmDialog("ERROR", "An error occurred in the script. Please contact the server administrator.");
