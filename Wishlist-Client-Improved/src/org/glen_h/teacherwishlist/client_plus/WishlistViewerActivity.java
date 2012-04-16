@@ -283,6 +283,10 @@ public class WishlistViewerActivity extends Activity {
            	    					   }else if(status == 500){
            	    						// Web script error
            	    						makeSimpleConfirmDialog("ERROR", "An error occurred in the script. Please contact the server administrator.");
+           	    					}else if(status < 400){
+           	    						makeSimpleConfirmDialog("Success", "Marking "+wlist[itemid_dialog]+" as bought was successful.\nHTTP Status Code: "+status);
+           	    					}else if(status >= 400){
+           	    						makeSimpleConfirmDialog("ERROR", "An error occured while marking "+wlist[itemid_dialog]+" as bought.\nHTTP Status Code: "+status);
            	    					}
             	    	           }
             	    	       })
